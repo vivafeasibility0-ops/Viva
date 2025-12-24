@@ -1,0 +1,194 @@
+/* =========================
+   RESET & GLOBAL
+========================= */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    overflow: hidden;
+    color: #ffffff;
+}
+
+/* =========================
+   BACKGROUND VIDEO
+========================= */
+#bg-video {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -3;
+}
+
+/* Light contrast overlay (NOT blurry) */
+.video-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(91, 89, 89, 0.242);/* reduced darkness */
+    z-index: -1;
+}
+
+/* =========================
+   APP LAYOUT
+========================= */
+.app-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 60px 80px;
+    gap: 60px;
+    flex-wrap: wrap;
+}
+
+/* =========================
+   LEFT PANEL
+========================= */
+.left-panel {
+    flex: 1 1 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.image-container img {
+    max-width: 150px;
+    border-radius: 14px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+}
+
+/* Glass cards */
+.network-box {
+    background: rgba(67, 66, 66, 0.32);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 22px;
+    border-radius: 14px;
+    text-align: center;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.network-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 35px rgba(0,0,0,0.35);
+}
+
+/* =========================
+   RIGHT PANEL
+========================= */
+.right-panel {
+    flex: 1 1 420px;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.45);
+}
+
+/* =========================
+   FORM ELEMENTS
+========================= */
+.panel-title {
+    font-size: 28px;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+label {
+    font-weight: 600;
+    margin-top: 12px;
+    display: block;
+}
+
+.form-control {
+    width: 100%;
+    border-radius: 10px;
+    border: none;
+    padding: 12px 14px;
+    margin-top: 6px;
+    background: rgba(255,255,255,0.95);
+    color: #000;
+}
+
+.form-control:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(13,110,253,0.4);
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.btn-primary-custom {
+    width: 100%;
+    padding: 13px;
+    font-size: 17px;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    margin-top: 20px;
+    background: linear-gradient(135deg, #0d6efd, #084cdf);
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary-custom:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(13,110,253,0.5);
+}
+
+.btn-secondary-custom {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    margin-top: 14px;
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-secondary-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background: rgba(255,255,255,0.3);
+    margin: 30px 0;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 992px) {
+    .app-layout {
+        flex-direction: column;
+        padding: 30px 20px;
+    }
+
+    .left-panel,
+    .right-panel {
+        flex: 1 1 100%;
+    }
+
+    .image-container img {
+        max-width: 120px;
+        margin: 0 auto;
+    }
+}
+.app-footer {
+    margin-top: 60px;
+    padding: 14px 0;
+    text-align: center;
+    font-size: 13px;
+    color: #6c757d;
+}
+

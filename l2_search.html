@@ -1,0 +1,244 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>L2 Feasibility Tool</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'feasibility_app/images/viva.jpg' %}">
+
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        /* ===============================
+           GLOBAL RESET
+        =============================== */
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: "Segoe UI", system-ui, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ===============================
+           BACKGROUND VIDEO
+        =============================== */
+        #bg-video {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        /* Light overlay for readability */
+        .video-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(91, 89, 89, 0.194);
+            z-index: -1;
+        }
+
+        /* ===============================
+           MAIN CONTAINER
+        =============================== */
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===============================
+           HEADER
+        =============================== */
+        .page-title {
+            font-size: 30px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #0410f4;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ===============================
+           CARDS
+        =============================== */
+        .card-box {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(31, 60, 136, 0.15);
+            margin-bottom: 25px;
+            border-left: 6px solid #1f3c88;
+        }
+
+        /* ===============================
+           SEARCH
+        =============================== */
+        #searchInput {
+            border-radius: 14px;
+            padding: 12px 16px;
+            border: 1px solid #cfe0f5;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+        }
+
+        /* ===============================
+           TABLE
+        =============================== */
+        .table-wrapper {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 16px;
+            box-shadow: 0 14px 35px rgba(0,0,0,0.15);
+        }
+
+        table th {
+            background: #1f3c88;
+            color: #ffffff;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        table td {
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: rgba(31, 60, 136, 0.08);
+            transform: translateY(-1px);
+        }
+        .back-btn {
+            background-color: #0410f4;
+            border-radius: 14px;
+            font-weight: 700;
+            padding: 10px 18px;
+            box-shadow: 0 6px 16px rgba(43, 52, 216, 0.35);
+        }
+        .back-btn:hover {
+            background-color: #04acf4;
+        }
+
+    </style>
+</head>
+
+<body>
+<!-- BACKGROUND VIDEO -->
+<video autoplay muted loop playsinline id="bg-video">
+    <source src="{% static 'feasibility_app/videos/video.mp4' %}" type="video/mp4">
+</video>
+<div class="video-overlay"></div>
+
+<div class="container py-4">
+
+    <!-- HEADER -->
+    <div class="page-title">L2 Feasibility Dashboard</div>
+    
+    <a href="{% url 'dashboard' %}" class="btn btn-primary mb-4 back-btn">
+    ← Back to L1 Feasibility Tool
+    </a>
+
+    <!-- UPLOAD MASTER -->
+    <div class="card-box">
+        <h5 style="font-weight:600; color:#1f3c88; margin-bottom:15px;">
+            Upload Master File
+        </h5>
+
+        <form method="post" enctype="multipart/form-data" action="{% url 'upload_l2_master' %}">
+            {% csrf_token %}
+            <input type="file" name="master_file" class="form-control mb-3" required>
+
+            <button class="btn btn-primary btn-sm"
+                    style="background: #0d6efd, #084cdf">
+                Upload Master
+            </button>
+        </form>
+    </div>
+
+    <!-- SEARCH -->
+    <input id="searchInput" class="form-control mb-4"
+           placeholder="Search by Pincode or Location">
+
+    <!-- TABLE -->
+    <div class="table-wrapper table-responsive">
+        <table class="table table-bordered table-striped mb-0">
+            <thead>
+                <tr>
+                    <th>VivaCKTID</th>
+                    <th>Customer Name</th>
+                    <th>Address</th>
+                    <th>Pincode</th>
+                    <th>Location</th>
+                    <th>State</th>
+                    <th>BW</th>
+                    <th>Media</th>
+                    <th>BB Name</th>
+                    <th>BB Contact</th>
+                    <th>OTC</th>
+                    <th>MRC</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- ===============================
+     SCRIPT
+=============================== -->
+<script>
+    $("#searchInput").on("keyup", function () {
+        let query = $(this).val().trim();
+
+        $.ajax({
+            url: "{% url 'l2_search_api' %}",
+            method: "GET",
+            data: { q: query },
+            success: function (response) {
+                let tbody = $("#tableBody");
+                tbody.empty();
+
+                response.data.forEach(function(row) {
+                    tbody.append(`
+                        <tr>
+                            <td>${row.VivaCKTID}</td>
+                            <td>${row.CustomerName}</td>
+                            <td>${row.Address}</td>
+                            <td>${row.Pincode}</td>
+                            <td>${row.Location}</td>
+                            <td>${row.State}</td>
+                            <td>${row.BW}</td>
+                            <td>${row.Media}</td>
+                            <td>${row.BBName}</td>
+                            <td>${row.BBContact}</td>
+                            <td>${row.OTC}</td>
+                            <td>${row.MRC}</td>
+                        </tr>
+                    `);
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

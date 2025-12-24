@@ -1,23 +1,12 @@
-"""
-URL configuration for feasibility_project project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('feasibility_app.urls')),
+    path('', views.dashboard, name='dashboard'),
+    path('upload-master/', views.upload_dashboard_master, name='upload_master'),  # <- corrected
+    path('check-feasibility/', views.check_feasibility, name='check_feasibility'),
+    path('l2/', views.l2_search_page, name='l2_search'),
+    path('l2-upload/', views.upload_l2_master, name='upload_l2_master'),
+    path('l2-api/', views.l2_search_api, name='l2_search_api'),
 ]
+
